@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./index.css";
 
 //Rus
@@ -28,7 +29,8 @@ const cardData = [
   },
   {
     title: "ActivePlatform",
-    description: "Adobe integration and platform development for comprehensive subscriptions",
+    description:
+      "Adobe integration and platform development for comprehensive subscriptions",
     date: "November 10, 2022",
     imageUrl: "/img-4.jpeg",
     tags: ["#integration", "#platform", "#subscription"],
@@ -60,25 +62,40 @@ const tabData = [
 ];
 
 export default function App() {
-  return (
-    <>
-      {/*<button >Start</button>*/}
+  const [isOpen, setIsOpen] = useState(true);
+  const [activeTab, setActiveTab] = useState(0);
 
+  function handlePrevTab(){
+    if (activeTab > 0) {
+      setActiveTab(prev => prev - 1)
+    }
+  }
+
+  function handleNextTab(){
+    if (activeTab < tabData.length - 1) {
+      setActiveTab(prev => prev + 1)
+    }
+  }
+
+  return isOpen ? (
+    <button onClick={() => setIsOpen((prev) => !prev)}>Start</button>
+  ) : (
+    <>
       <div className="app">
-        <span className="close">&times;</span>
+        <span className="close" onClick={() => setIsOpen((prev) => !prev)}>&times;</span>
         <h1>State Tabs Card Display</h1>
 
         <div className="tab-buttons">
-          <button className="tab-button  active">Tab 1</button>
-          <button className="tab-button">Tab 2</button>
-          <button className="tab-button">Tab 3</button>
+          <button className={`tab-button  ${activeTab === 0 ? "active" : ''}`} onClick={() => setActiveTab(0)}>Tab 1</button>
+          <button className={`tab-button  ${activeTab === 1 ? "active" : ''}`}  onClick={() => setActiveTab(1)}>Tab 2</button>
+          <button className={`tab-button  ${activeTab === 2 ? "active" : ''}`}  onClick={() => setActiveTab(2)}>Tab 3</button>
         </div>
 
-        <CardContainer cards={tabData[0]} />
+        <CardContainer cards={tabData[activeTab]} />
 
         <div className="navigation-buttons">
-          <button>&lt; Previous</button>
-          <button>Next &gt;</button>
+          <button onClick={handlePrevTab} disabled={activeTab === 0}>&lt; Previous</button>
+          <button onClick={handleNextTab} disabled={activeTab === tabData.length -1}>Next &gt;</button>
         </div>
 
         <Footer />
@@ -128,8 +145,8 @@ function Footer() {
   return (
     <footer className="footer">
       <p>
-        <strong>Technologies used:</strong> React, JSX, useState, Conditional Rendering, CSS
-        Modules, Event Handling.
+        <strong>Technologies used:</strong> React, JSX, useState, Conditional
+        Rendering, CSS Modules, Event Handling.
       </p>
     </footer>
   );
